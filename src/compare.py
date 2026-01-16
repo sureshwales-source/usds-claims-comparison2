@@ -144,9 +144,9 @@ def load_csv_to_sqlite(
     total_rows = 0
     for i, chunk in enumerate(pd.read_csv(csv_path, chunksize=chunksize)):
         chunk = standardize_df(chunk)
-            # print(f"[DEBUG]   chunk {chunk_idx}: standardized cols={len(chunk.columns)}")
+        # print(f"[DEBUG]   chunk {chunk_idx}: standardized cols={len(chunk.columns)}")
         # print(f"[DEBUG]   chunk {chunk_idx}: writing to SQLite table {table_name}")
-            chunk.to_sql(table, conn, if_exists="replace" if i == 0 else "append", index=False)
+        chunk.to_sql(table, conn, if_exists="replace" if i == 0 else "append", index=False)
         total_rows += len(chunk)
     elapsed = (dt.datetime.now() - start).total_seconds()
     return {"rows": total_rows, "seconds": elapsed}
@@ -387,7 +387,7 @@ def run_compare(old_dir: Path, new_dir: Path, out_dir: Path, db_path: Path, tole
     conn = sqlite3.connect(db_path)
 
     run_meta = {
-        "run_utc": dt.datetime.utcnow().isoformat(timespec="seconds") + "Z",
+        "run_utc": dt.datetime.now(dt.UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "old_dir": str(old_dir),
         "new_dir": str(new_dir),
         "tolerance": tolerance,
